@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<title>System Alert</title>
+<style>
+body {
+    background-color: red;   /* 🔴 Background page merah */
+    color: #00FF00;          /* 🟢 Tulisan hijau */
+    font-family: monospace;
+    margin: 0;
+    padding: 20px;
+    font-size: 18px;
+}
+#console {
+    white-space: pre-wrap;
+}
+#alert {
+    color: yellow; /* 🟡 Biar lebih nampak di atas background merah */
+    font-size: 32px;
+    text-align: center;
+    animation: blink 1s infinite;
+    margin-bottom: 20px;
+}
+.line {
+    display: block;
+    padding: 5px;
+    margin: 2px 0;
+    background-color: darkred;  /* 🔴 Background baris */
+    color: #00FF00;             /* 🟢 Tulisan hijau */
+}
+#stopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+.toast {
+    visibility: hidden;
+    min-width: 200px;
+    margin-left: -100px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+.toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+@keyframes blink {
+  0% {opacity: 1;}
+  50% {opacity: 0;}
+  100% {opacity: 1;}
+}
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+</style>
+</head>
+<body>
+<div id="alert">⚠️ VIRUS DETECTED!</div>
+<div id="console"></div>
+<button id="stopBtn">Stop Prank</button>
+<div id="toast" class="toast">Ini hanyalah PRANK 😂</div>
+<script>
+let lines = [
+    "[!] Mengakses Kamera…",
+    "[!] Mengaktifkan Mikrofon…",
+    "[!] Mengambil Lokasi GPS…",
+    "[!] Membaca Chat WhatsApp…",
+    "[!] Mengirim SMS Rahsia…"
+];
+
+let i = 0;
+let consoleEl = document.getElementById("console");
+
+function typeLine(text, callback) {
+    let j = 0;
+    let span = document.createElement("span");
+    span.className = "line";
+    consoleEl.appendChild(span);
+
+    let interval = setInterval(() => {
+        span.textContent += text[j];
+        j++;
+        if (j >= text.length) {
+            clearInterval(interval);
+            consoleEl.appendChild(document.createElement("br"));
+            callback();
+        }
+    }, 50);
+}
+
+function nextLine() {
+    if (i < lines.length) {
+        typeLine(lines[i], () => {
+            i++;
+            nextLine();
+        });
+    }
+}
+
+nextLine();
+
+// stop prank
+document.getElementById("stopBtn").onclick = showToast;
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") showToast();
+});
+
+function showToast(){
+    let t = document.getElementById("toast");
+    t.className = "toast show";
+    setTimeout(()=>{ t.className = t.className.replace("show", ""); }, 3000);
+}
+</script>
+</body>
+</html>
